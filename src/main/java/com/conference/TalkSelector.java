@@ -35,17 +35,42 @@ public class TalkSelector {
         return candidateSubsets.get(candidateSubsets.size() -1);
     }
 
-    
-    public void selectTalksForDuration(int index, int nodeSum, int nodeMax, int remainingSum, int timeLimitInMinutes) {
+    /**
+     * The problem we try to solve here is similar to Knapsack problem. I used "Backtracking" technique to switch off
+     * the nodes that don't get us close to the timeLimit (desired number) or those that exceed the desired number
+     *
+     * Let A = [a1, a2, a3, a4];
+     * K = Desired number (timeLimitInMinutes)
+     *
+     * Start from a1, and we follow two paths
+     * path 1: create a subset that includes a1
+     * path 2: create a subset that excludes a2
+     *
+     * path 1.1 -> if sum including a1 < desiredNumber include a1 in the subset (switch it on by assigning '1' in the 'visitedIndexes'
+     *      path 1.1.1 -> If sum including next element get closer to the desiredNumber include that element and get deeper (make recursive call)
+     *      path 1.1.2 -> If sum including next element exceed desiredNumber,
+     *          exclude the element from the subset (switch it off by assigning '0' in the corresponding position in the 'visitedIndexes')
+     *              and continue doing so until we find an element that adds up to the nodeSum that gets closer to the desired number.
+     *
+     * path 1.2 -> if sum including a1 > desiredNumber exclude a1 from the subset (switch it off by assigning '0' in the 'visitedIndexes') and go to the next index
+     *
+     *
+     * @param index
+     * @param nodeSum
+     * @param nodeMax
+     * @param remainingSum
+     * @param timeLimitInMinutes
+     */
+    private void selectTalksForDuration(int index, int nodeSum, int nodeMax, int remainingSum, int timeLimitInMinutes) {
 
         if(maximumSum == timeLimitInMinutes) return;
 
         visitedIndexes[index] = 1;
 
         int currentSum = proposedTalks[index].getMinutes() + nodeSum;
-
+        //path 1
         if(currentSum > nodeMax){
-
+            //path 1.1
             if(currentSum <= timeLimitInMinutes) {
 
                 nodeMax = currentSum;
@@ -64,9 +89,9 @@ public class TalkSelector {
                 candidateSubsets.add(closestSumSet);
                 if(currentSum > maximumSum) maximumSum = currentSum;
 
-            } else {
+            } else {//path 1.2
 
-                visitedIndexes[index] = 0;
+                visitedIndexes[index] = 0; //exclude the current element at index since when added to the nodeSum it exceeds the desiredNumber
                 if(index + 1 < proposedTalks.length){
 
                     selectTalksForDuration(index + 1, nodeSum, nodeMax, remainingSum - proposedTalks[index].getMinutes(), timeLimitInMinutes);
@@ -77,14 +102,14 @@ public class TalkSelector {
         if(index + 1 < proposedTalks.length){
 
             int nextSum = currentSum + proposedTalks[index + 1].getMinutes();
-
+            //path 1.1.1
             if(nextSum >= nodeMax && nextSum <= timeLimitInMinutes ){
 
                 selectTalksForDuration(index + 1, currentSum, nodeMax, remainingSum - proposedTalks[index].getMinutes(), timeLimitInMinutes);
 
-            } else {
+            } else { //path 1.1.2
 
-                visitedIndexes[index + 1] = 0;
+                visitedIndexes[index + 1] = 0; //exclude element at index+1 since when added to the currentSum it exceeds the desiredNumber
                 int tempIndex = index + 2;
 
                 while(tempIndex < proposedTalks.length ){
@@ -98,7 +123,7 @@ public class TalkSelector {
 
                     } else {
 
-                        visitedIndexes[tempIndex] = 0;
+                        visitedIndexes[tempIndex] = 0;  //exclude element at tempIndex since when added to the currentSum it exceeds the desiredNumber
                         remainingSum -= proposedTalks[tempIndex].getMinutes();
                     }
 
@@ -107,10 +132,10 @@ public class TalkSelector {
             }
 
             nextSum = currentSum + proposedTalks[index + 1].getMinutes();
-
+            //path 2
             if(nextSum >= nodeMax && nextSum <= timeLimitInMinutes && (nodeSum + remainingSum - proposedTalks[index].getMinutes() >= maximumSum) ){
 
-                visitedIndexes[index] = 0;
+                visitedIndexes[index] = 0; //exclude element at index to explore the next branch without element at index
                 selectTalksForDuration(index + 1, nodeSum, nodeMax, remainingSum - proposedTalks[index].getMinutes(), timeLimitInMinutes);
             }
         }
