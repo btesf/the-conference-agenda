@@ -15,13 +15,18 @@ public class TalkSelector {
 
     private List<Talk[]> candidateSubsets; //accumulates the subsets whose sum is closer to the desired duration
 
-    public TalkSelector(Talk[] proposedTalks){
+    TalkSelector(Talk[] proposedTalks){
 
         this.proposedTalks = proposedTalks;
         this.visitedIndexes = new int[proposedTalks.length];
         candidateSubsets = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param durationInMinutes
+     * @return
+     */
     public Talk[] selectTalksForDuration(int durationInMinutes){
         //sort it in reverse so that, we can stop following futile nodes (backtrack) faster (than sorted in asc order).
         Arrays.sort(proposedTalks, Collections.reverseOrder());
@@ -63,6 +68,7 @@ public class TalkSelector {
      */
     private void selectTalksForDuration(int index, int nodeSum, int nodeMax, int remainingSum, int timeLimitInMinutes) {
 
+        //if we already got a perfect sum from previous recursions, we don't need to explore other nodes.
         if(maximumSum == timeLimitInMinutes) return;
 
         visitedIndexes[index] = 1;
@@ -132,8 +138,8 @@ public class TalkSelector {
             }
 
             nextSum = currentSum + proposedTalks[index + 1].getMinutes();
-            //path 2
-            if(nextSum >= nodeMax && nextSum <= timeLimitInMinutes && (nodeSum + remainingSum - proposedTalks[index].getMinutes() >= maximumSum) ){
+            //path 2 (the last condition: if after adding the next element, we won't get a value that exceed (or equal to) the already attained maximumSum don't follow the path
+            if(nextSum >= nodeMax && nextSum <= timeLimitInMinutes && (nodeSum + remainingSum - proposedTalks[index].getMinutes() >= maximumSum)){
 
                 visitedIndexes[index] = 0; //exclude element at index to explore the next branch without element at index
                 selectTalksForDuration(index + 1, nodeSum, nodeMax, remainingSum - proposedTalks[index].getMinutes(), timeLimitInMinutes);
@@ -141,6 +147,10 @@ public class TalkSelector {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Talk[]> getCandidateSubsets() {
 
         return candidateSubsets;
