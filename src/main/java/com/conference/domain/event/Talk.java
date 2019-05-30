@@ -1,5 +1,7 @@
 package com.conference.domain.event;
 
+import com.conference.Constants;
+
 public class Talk extends Event implements Comparable<Talk> {
 
     private int id; //hash code of "smushed name"
@@ -39,5 +41,27 @@ public class Talk extends Event implements Comparable<Talk> {
     public int compareTo(Talk secondTalk) {
 
        return this.minutes - secondTalk.minutes;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder(this.startingTime);
+        //append space
+        stringBuilder.append(" ");
+        stringBuilder.append(title);
+        stringBuilder.append(" ");
+
+        if(getMinutes() == Constants.LIGHTNING_DURATION_IN_MINS){
+            //if 5 minute talk, append a text "lightning"
+            stringBuilder.append("lightning");
+
+        } else {
+            //append minute and text "min". e.g. "45min"
+            stringBuilder.append(getMinutes());
+            stringBuilder.append("min");
+        }
+
+        return stringBuilder.toString();
     }
 }

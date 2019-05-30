@@ -84,8 +84,12 @@ public class Parser {
 
     private List<Talk> getTalks(String text)  {
 
-        List<Talk> proposedTalks = new ArrayList<>();
+        if(text == null || text.trim().equals("")){
 
+            throw new ConferenceAgendaException("File content is empty.");
+        }
+
+        List<Talk> proposedTalks = new ArrayList<>();
         String[] lines = getStringLines(text);
 
         if(lines.length < 2){
@@ -106,7 +110,7 @@ public class Parser {
             throw new ConferenceAgendaException("The first line in the file should be a number - number of talks in the file");
         }
 
-        for(int i = 1; i < lines.length; i++){
+        for(int i = 1; i <= noOfTalks; i++){
 
             String line = lines[i];
             String cleanedUpString = cleanupString(line);

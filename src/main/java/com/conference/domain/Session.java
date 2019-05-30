@@ -28,13 +28,13 @@ public class Session {
         this.type = sessionType;
     }
 
-    public void setEvents(Event[] events){
+    public void setEvents(List<Event> events){
 
-        this.events = new ArrayList<>(Arrays.asList(events));
+        this.events = events;
 
-        if(events.length > 0){
+        if(events.size() > 0){
             //if the total time of all events (talks at this point) is less than the allocated time for the session, add a networking event
-            int totalTalkTimeInMins = Arrays.stream(events).mapToInt(Event::getMinutes).sum();
+            int totalTalkTimeInMins = events.stream().mapToInt(Event::getMinutes).sum();
 
             if(totalTalkTimeInMins < type.DURATION_IN_MINUTES){
 

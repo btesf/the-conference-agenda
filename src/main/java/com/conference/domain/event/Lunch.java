@@ -19,15 +19,4 @@ public class Lunch extends Event{
 
         this.setMinutes((int)trackDuration.toMinutes() - totalEventTimeOutsideLunch);
     }
-
-    @Override
-    public String toString() {
-
-        StringBuilder stringBuilder = new StringBuilder(this.startingTime);
-        //append space
-        stringBuilder.append(" ");
-        stringBuilder.append(title);
-
-        return stringBuilder.toString();
-    }
 }
