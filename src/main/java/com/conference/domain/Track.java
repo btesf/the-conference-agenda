@@ -3,6 +3,7 @@ package com.conference.domain;
 
 import com.conference.exception.ConferenceAgendaException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,10 +11,15 @@ import java.util.List;
  */
 public class Track {
 
-    private int trackNumber; //TODO: make it unique and tread safe
+    private final int trackNumber;
     private List<Session> sessions;
     private final int ALLOWED_SESSION_COUNT = 2;
 
+    public Track(int trackNumber){
+
+        sessions = new ArrayList<>();
+        this.trackNumber = trackNumber;
+    }
     /**
      * A track will have ALLOWED_SESSION_COUNT number of sessions.
      * The first one will be a Morning session, and the second, an Afternoon session
@@ -43,5 +49,23 @@ public class Track {
 
     public List<Session> getSessions() {
         return sessions;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder("Track ");
+
+        stringBuilder.append(trackNumber);
+        stringBuilder.append(":");
+        stringBuilder.append(System.getProperty("line.separator"));
+
+        for(Session session : sessions){
+
+            stringBuilder.append(session.toString());
+            stringBuilder.append(System.getProperty("line.separator"));
+        }
+
+        return stringBuilder.toString();
     }
 }

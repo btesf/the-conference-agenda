@@ -1,6 +1,6 @@
 package com.conference;
 
-import com.conference.domain.Talk;
+import com.conference.domain.event.Talk;
 import com.conference.exception.ConferenceAgendaException;
 
 import java.util.regex.Matcher;
@@ -51,7 +51,7 @@ public class Parser {
 
         if(duration.toLowerCase().equals("lightning")){
 
-            return 5;
+            return Constants.LIGHTNING_DURATION_IN_MINS;
 
         } else {
             //remove the text "min"

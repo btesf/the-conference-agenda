@@ -1,30 +1,14 @@
-package com.conference.domain;
+package com.conference.domain.event;
 
-public class Talk implements Comparable<Talk> {
+public class Talk extends Event implements Comparable<Talk> {
 
-    private String title;
-    private int minutes;
     private int id; //hash code of "smushed name"
 
     public Talk(String title, int minutes){
 
-        this.title = title;
-        this.minutes = minutes;
+        super(title, minutes);
         this.id = getSmushedName(title, minutes).hashCode();
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
     /*
      change string to lowercase, remove spaces, and combine it with minutes to get a "Smushed" name
      */

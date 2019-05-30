@@ -1,14 +1,12 @@
 package com.conference;
 
-import com.conference.domain.Talk;
+import com.conference.domain.event.Talk;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 

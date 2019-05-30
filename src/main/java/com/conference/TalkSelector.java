@@ -1,6 +1,6 @@
 package com.conference;
 
-import com.conference.domain.Talk;
+import com.conference.domain.event.Talk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,23 +11,24 @@ public class TalkSelector {
 
     private Talk[] proposedTalks;
     private int[] visitedIndexes; //to mark indices of proposedTalks array that form the desired subset
-    private int maximumSum = 0; //maximum of all nodeMax values (maximum sum closer or equal to to the session duration)
+    private int maximumSum; //maximum of all nodeMax values (maximum sum closer or equal to to the session duration)
 
     private List<Talk[]> candidateSubsets; //accumulates the subsets whose sum is closer to the desired duration
 
-    TalkSelector(Talk[] proposedTalks){
-
-        this.proposedTalks = proposedTalks;
-        this.visitedIndexes = new int[proposedTalks.length];
-        candidateSubsets = new ArrayList<>();
-    }
-
     /**
+     * Reset traversing parameters and select talks from proposedTalks
      *
      * @param durationInMinutes
      * @return
      */
     public Talk[] selectTalksForDuration(int durationInMinutes){
+
+        if(proposedTalks == null || proposedTalks.length < 1) return null;
+
+        //reset parameters
+        this.maximumSum = 0;
+        this.visitedIndexes = new int[proposedTalks.length];
+        candidateSubsets = new ArrayList<>();
         //sort it in reverse so that, we can stop following futile nodes (backtrack) faster (than sorted in asc order).
         Arrays.sort(proposedTalks, Collections.reverseOrder());
 
@@ -41,7 +42,7 @@ public class TalkSelector {
     }
 
     /**
-     * The problem we try to solve here is similar to Knapsack problem. I used "Backtracking" technique to switch off
+     * The problem we try to solve here is similar to the known "Knapsack problem". I used "Backtracking" technique to switch off
      * the nodes that don't get us close to the timeLimit (desired number) or those that exceed the desired number
      *
      * Let A = [a1, a2, a3, a4];
@@ -49,15 +50,15 @@ public class TalkSelector {
      *
      * Start from a1, and we follow two paths
      * path 1: create a subset that includes a1
-     * path 2: create a subset that excludes a2
+     * path 2: create a subset that excludes a1
      *
      * path 1.1 -> if sum including a1 < desiredNumber include a1 in the subset (switch it on by assigning '1' in the 'visitedIndexes'
-     *      path 1.1.1 -> If sum including next element get closer to the desiredNumber include that element and get deeper (make recursive call)
-     *      path 1.1.2 -> If sum including next element exceed desiredNumber,
+     *      path 1.1.1 -> If sum including next element to a1 get closer to the desiredNumber include that element and get deeper (make recursive call)
+     *      path 1.1.2 -> If sum including next element to a1 exceeds the desiredNumber,
      *          exclude the element from the subset (switch it off by assigning '0' in the corresponding position in the 'visitedIndexes')
      *              and continue doing so until we find an element that adds up to the nodeSum that gets closer to the desired number.
      *
-     * path 1.2 -> if sum including a1 > desiredNumber exclude a1 from the subset (switch it off by assigning '0' in the 'visitedIndexes') and go to the next index
+     * path 2 -> if sum including a1 > desiredNumber OR to explore other nodes that don't include a1, exclude a1 from the subset (switch it off by assigning '0' in the 'visitedIndexes') and go to the next index
      *
      *
      * @param index
@@ -85,7 +86,7 @@ public class TalkSelector {
                 candidateSubsets.add(closestSumSet);
                 if(currentSum > maximumSum) maximumSum = currentSum;
 
-            } else {//path 1.2
+            } else {//path 2
 
                 visitedIndexes[index] = 0; //exclude the current element at index since when added to the nodeSum it exceeds the desiredNumber
                 if(index + 1 < proposedTalks.length){
@@ -137,7 +138,7 @@ public class TalkSelector {
         }
     }
 
-    private Talk[] collectMarkedTalks(int index, int[] visitedIndexes) {
+    Talk[] collectMarkedTalks(int index, int[] visitedIndexes) {
 
         int counter = 0;
         final int noOfMarkedIndexes = (int) Arrays.stream(visitedIndexes).limit(index + 1).filter(visitedIndexesElement -> visitedIndexesElement == 1).count();
@@ -161,5 +162,10 @@ public class TalkSelector {
     public List<Talk[]> getCandidateSubsets() {
 
         return candidateSubsets;
+    }
+
+    public void setProposedTalks(Talk[] proposedTalks) {
+
+        this.proposedTalks = proposedTalks;
     }
 }
