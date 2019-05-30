@@ -88,6 +88,8 @@ public class ConferenceAgendaScheduler {
                 new Talk("A World Without Clinical Trials", 30),
                 new Talk("User Interface CSS in AngularJS Apps", 30)};
 
+        //List<packingOptions = Parser.parse(text);
+
         ConferenceAgendaScheduler conferenceAgendaScheduler = new ConferenceAgendaScheduler();
         List<Track> scheduledTracks = conferenceAgendaScheduler.generateSchedule(talks);
 

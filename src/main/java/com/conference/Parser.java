@@ -3,11 +3,22 @@ package com.conference;
 import com.conference.domain.event.Talk;
 import com.conference.exception.ConferenceAgendaException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
 
+    public List<Talk> parse(String text) {
+
+        if(text == null || text.trim().equals("")){
+
+            throw new ConferenceAgendaException("File content is empty.");
+        }
+
+        return getTalks(text);
+    }
     /**
      * create a Talk Instance from a string containing Talk description
      *
@@ -59,4 +70,63 @@ public class Parser {
             return Integer.valueOf(duration);
         }
     }
+
+    private String[] getStringLines(String text) {
+
+        if (text == null || text.trim().equals("")) {
+
+            throw new ConferenceAgendaException("Empty file content.");
+        }
+
+        return text.split("[\\r?\\n]+");//ignores multiple new lines
+    }
+
+
+    private List<Talk> getTalks(String text)  {
+
+        List<Talk> proposedTalks = new ArrayList<>();
+
+        String[] lines = getStringLines(text);
+
+        if(lines.length < 2){
+
+            throw new ConferenceAgendaException("The file should contain at least two lines; 1st line: No of talks, Next lines: Talk titles and time in minutes");
+        }
+
+        //first line will be the number of proposed talks listed in the file
+        String noOfTalksString = lines[0];
+        int noOfTalks;
+
+        try {
+
+            noOfTalks = Integer.valueOf(noOfTalksString);
+
+        } catch (NumberFormatException e){
+
+            throw new ConferenceAgendaException("The first line in the file should be a number - number of talks in the file");
+        }
+
+        for(int i = 1; i < lines.length; i++){
+
+            String line = lines[i];
+            String cleanedUpString = cleanupString(line);
+
+            proposedTalks.add(getTalk(cleanedUpString));
+        }
+
+        return proposedTalks;
+    }
+
+    /**
+     * trimming and any further cleanup and sanitizing work goes here
+     *
+     * @param talkDescription
+     * @return
+     */
+    private String cleanupString(String talkDescription) {
+
+        return talkDescription.trim();
+    }
+
+
 }
