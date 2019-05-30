@@ -80,17 +80,7 @@ public class TalkSelector {
             if(currentSum <= timeLimitInMinutes) {
 
                 nodeMax = currentSum;
-                int counter = 0;
-                final int noOfMarkedIndexes = (int) Arrays.stream(visitedIndexes).limit(index + 1).filter(visitedIndexesElement -> visitedIndexesElement == 1).count();
-                Talk[] closestSumSet = new Talk[noOfMarkedIndexes];
-
-                for(int i = 0; i <= index; i++) {
-
-                    if(visitedIndexes[i] == 1) {
-
-                        closestSumSet[counter++] = proposedTalks[i];
-                    }
-                }
+                Talk[] closestSumSet = collectMarkedTalks(index, visitedIndexes);
 
                 candidateSubsets.add(closestSumSet);
                 if(currentSum > maximumSum) maximumSum = currentSum;
@@ -145,6 +135,23 @@ public class TalkSelector {
                 selectTalksForDuration(index + 1, nodeSum, nodeMax, remainingSum - proposedTalks[index].getMinutes(), timeLimitInMinutes);
             }
         }
+    }
+
+    private Talk[] collectMarkedTalks(int index, int[] visitedIndexes) {
+
+        int counter = 0;
+        final int noOfMarkedIndexes = (int) Arrays.stream(visitedIndexes).limit(index + 1).filter(visitedIndexesElement -> visitedIndexesElement == 1).count();
+        Talk[] closestSumSet = new Talk[noOfMarkedIndexes];
+
+        for(int i = 0; i <= index; i++) {
+
+            if(visitedIndexes[i] == 1) {
+
+                closestSumSet[counter++] = proposedTalks[i];
+            }
+        }
+
+        return closestSumSet;
     }
 
     /**
