@@ -6,8 +6,6 @@ import com.conference.domain.event.Networking;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -51,11 +49,11 @@ public class Session {
                 this.events.add(lunchEvent);
             }
 
-            setTalkBeginTimes();
+            setEventBeginTimes();
         }
     }
 
-    private void setTalkBeginTimes() {
+    private void setEventBeginTimes() {
 
         LocalTime time = LocalTime.of(type.SESSION_BEGIN_TIME, 0);
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");

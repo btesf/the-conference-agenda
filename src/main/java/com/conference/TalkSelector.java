@@ -12,7 +12,6 @@ public class TalkSelector {
     private List<Talk> proposedTalks;
     private int[] visitedIndexes; //to mark indices of proposedTalks array that form the desired subset
     private int maximumSum; //maximum of all nodeMax values (maximum sum closer or equal to to the session duration)
-
     private List<List<Talk>> candidateSubsets; //accumulates the subsets whose sum is closer to the desired duration
 
     /**
