@@ -91,10 +91,20 @@ public class ConferenceAgenda {
         return allTalks.stream().filter(a -> !assignedTalks.contains(a)).collect(Collectors.toList());
     }
 
+    /**
+     *  Runner
+     *
+     *  If an absolute file name is provided as an argument, it tries to read that file
+     *  Otherwise, it reads the content of a file named "proposed_talks.txt" from the "resources" directory
+     *
+     * @param args
+     * @throws URISyntaxException
+     */
     public static void main(String[] args) throws URISyntaxException {
 
+        String fileName = (args.length > 0) ? args[0] : FileUtil.getFileFromResource(ConferenceAgenda.class);
+
         ConferenceAgenda conferenceAgenda = new ConferenceAgenda();
-        String fileName = FileUtil.getFileFromResource(ConferenceAgenda.class);
         List<Track> scheduledTracks = conferenceAgenda.generateScheduleFromFile(fileName);
 
         for(Track track : scheduledTracks){

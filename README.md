@@ -77,3 +77,15 @@ Track 2: <br/>
 03:15PM Ant vs. Maven vs. Gradle Build Tool for Back-End Development 30min <br/>
 03:45PM A World Without HackerNews 30min <br/>
 04:15PM Networking Event <br/>
+
+###Test Run the Program
+
+1. As a standalone Java application <br/>
+    - ```java com.conference.ConferenceAgenda <absolute_file_name>```
+
+2. Jar file <br/>
+    * Create a jar using `gradle fatJar `
+    * ```java -jar <jar_file> <absolute_file_name>```
+
+3. From IDE
+    * Change the contents of `src/main/resources/proposed_talks.txt` and run `ConferenceAgenda.main()`
