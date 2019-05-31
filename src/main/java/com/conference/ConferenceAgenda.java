@@ -12,16 +12,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConferenceAgendaScheduler {
+/**
+ * Entry point to the App
+ */
+public class ConferenceAgenda {
 
     private TalkSelector talkSelector;
 
-    public ConferenceAgendaScheduler(){
+    ConferenceAgenda(){
 
         this.talkSelector = new TalkSelector();
     }
 
-    public List<Track> generateSchedule(List<Talk> proposedTalks){
+    /**
+     * Takes a file path containing talk descriptions, parse the text into List<Talk> and return List<Track>
+     *
+     * @param filePath
+     * @return
+     */
+    public List<Track> generateScheduleFromFile(String filePath) {
+
+        Parser parser = new Parser();
+        String text = FileUtil.getTextFromFile(filePath);
+
+        List<Talk> talks = parser.parse(text);
+
+        return generateSchedule(talks);
+    }
+
+    /**
+     *  Takes a List<Talk>, organize them into track and sessions and return List<Track>
+     *
+     *  It uses, TaskSelector -> selectTalksForDuration(...) method to decide which talks go to which session
+     */
+    private List<Track> generateSchedule(List<Talk> proposedTalks){
 
         List<Track> conferenceTracks = new ArrayList<>();
 
@@ -67,23 +91,11 @@ public class ConferenceAgendaScheduler {
         return allTalks.stream().filter(a -> !assignedTalks.contains(a)).collect(Collectors.toList());
     }
 
-    public List<Track> generateSchedule(String filePath) {
-
-        Parser parser = new Parser();
-        String text = FileUtil.getTextFromFile(filePath);
-
-        List<Talk> talks = parser.parse(text);
-
-        return generateSchedule(talks);
-    }
-
     public static void main(String[] args) throws URISyntaxException {
 
-        ConferenceAgendaScheduler conferenceAgendaScheduler = new ConferenceAgendaScheduler();
-        URL resource = ConferenceAgendaScheduler.class.getClassLoader().getResource("proposed_talks.txt");
-        Paths.get(resource.toURI()).toFile();
-        String fileName = Paths.get(resource.toURI()).toString();
-        List<Track> scheduledTracks = conferenceAgendaScheduler.generateSchedule(fileName);
+        ConferenceAgenda conferenceAgenda = new ConferenceAgenda();
+        String fileName = FileUtil.getFileFromResource(ConferenceAgenda.class);
+        List<Track> scheduledTracks = conferenceAgenda.generateScheduleFromFile(fileName);
 
         for(Track track : scheduledTracks){
             System.out.println(track.toString());

@@ -1,7 +1,9 @@
 package com.conference.domain.event;
 
-import com.conference.Constants;
-
+/**
+ *  Event is anything that happens in a day(Track).
+ *  It can be a Talk, a Networking Event or even a Lunch
+ */
 public abstract class Event {
 
     protected String title;
@@ -12,6 +14,11 @@ public abstract class Event {
 
         this.title = title;
         this.minutes = minutes;
+    }
+
+    public Event(String title){
+
+        this.title = title;
     }
 
     public String getTitle() {

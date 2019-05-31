@@ -46,7 +46,7 @@ public class Talk extends Event implements Comparable<Talk> {
     @Override
     public String toString() {
 
-        StringBuilder stringBuilder = new StringBuilder(this.startingTime);
+        StringBuilder stringBuilder = new StringBuilder(this.startingTime != null ? this.startingTime : "" /* to not break test*/);
         //append space
         stringBuilder.append(" ");
         stringBuilder.append(title);

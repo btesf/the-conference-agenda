@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A "Session" represents a morning or afternoon part of a day in which events will be presented
+ * A "Session" represents a morning or afternoon part of a day in which "Event"s happen. E.g Talk presentation, or Networking Event
  */
 public class Session {
 

@@ -2,6 +2,11 @@ package com.conference.domain;
 
 import java.time.LocalTime;
 
+/**
+ * Session properties are defined here:
+ * Session can be a Morning or Afternoon one
+ * Each session type has a duration, beginning and ending time
+ */
 public enum SessionType {
 
     MORNING(180, 9),

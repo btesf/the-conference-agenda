@@ -16,7 +16,10 @@ public class TalkSelector {
     private List<List<Talk>> candidateSubsets; //accumulates the subsets whose sum is closer to the desired duration
 
     /**
-     * Reset traversing parameters and select talks from proposedTalks
+     * Reset traversing parameters and call selectTalksForDuration
+     *
+     * The result of selectTalksForDuration(...) is a list of candidate subsets which are closer to a desired sum(timelimit)
+     * The method picks the last element(subset) from the candidateSubsets - whose sum is closest to the timeLimit
      *
      * @param durationInMinutes
      * @return
@@ -37,7 +40,7 @@ public class TalkSelector {
         selectTalksForDuration(0, 0, 0, totalDurationInMinutes, durationInMinutes);
 
         if(candidateSubsets.size() == 0)  return null;
-        //the last array in the list is the one which is the closest sum to the timeLimit
+        //the last list in the list is the one which is the closest sum to the timeLimit
         return candidateSubsets.get(candidateSubsets.size() -1);
     }
 
@@ -140,7 +143,6 @@ public class TalkSelector {
 
     List<Talk> collectMarkedTalks(int index, int[] visitedIndexes) {
 
-        final int noOfMarkedIndexes = (int) Arrays.stream(visitedIndexes).limit(index + 1).filter(visitedIndexesElement -> visitedIndexesElement == 1).count();
         List<Talk> closestSumSet = new ArrayList<>();
 
         for(int i = 0; i <= index; i++) {
