@@ -5,9 +5,8 @@ import com.conference.domain.Track;
 import com.conference.domain.event.Event;
 import com.conference.domain.event.Talk;
 import com.conference.exception.ConferenceAgendaException;
+
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,11 +32,21 @@ public class ConferenceAgenda {
     public List<Track> generateScheduleFromFile(String filePath) {
 
         Parser parser = new Parser();
-        String text = FileUtil.getTextFromFile(filePath);
+        List<Track> tracks = null;
 
-        List<Talk> talks = parser.parse(text);
+        try{
 
-        return generateSchedule(talks);
+            String text = FileUtil.getTextFromFile(filePath);
+            List<Talk> talks = parser.parse(text);
+
+            tracks = generateSchedule(talks);
+
+        } catch (ConferenceAgendaException conferenceAgendaException){
+
+            System.out.println(conferenceAgendaException.getMessage());
+        }
+
+        return tracks;
     }
 
     /**
@@ -107,8 +116,9 @@ public class ConferenceAgenda {
         ConferenceAgenda conferenceAgenda = new ConferenceAgenda();
         List<Track> scheduledTracks = conferenceAgenda.generateScheduleFromFile(fileName);
 
-        for(Track track : scheduledTracks){
-            System.out.println(track.toString());
-        }
+        if(scheduledTracks != null)
+            for(Track track : scheduledTracks){
+                System.out.println(track.toString());
+            }
     }
 }
