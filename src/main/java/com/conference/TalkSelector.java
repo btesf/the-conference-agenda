@@ -45,8 +45,12 @@ public class TalkSelector {
     }
 
     /**
-     * The problem we try to solve here is similar to the known "Knapsack problem". I used "Backtracking" technique to switch off
-     * the nodes that don't get us close to the timeLimit (desired number) or those that exceed the desired number
+     * While traversing the nodes, I used "Backtracking" technique to switch off
+     * the nodes that don't get us close to the timeLimit (desired number) or those that exceed the desired number.
+     *
+     * This approach will significantly reduce the time complexity. In addition, I reversed the Talks based on their duration (minutes) which
+     * further reduce the time complexity to a much lower order.
+     *
      *
      * Let A = [a1, a2, a3, a4];
      * K = Desired number (timeLimitInMinutes)
